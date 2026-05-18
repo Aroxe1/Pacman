@@ -48,8 +48,9 @@ public class PacmanController {
 
     // --- VARIABLES DU JEU ---
     private ImageView[][] grilleImages;
-    private int pacmanLigne;
-    private int pacmanColonne;
+    private GameMap gameMap;
+    private Player player;
+    private int score = 0;
 
     private Image imagePacman;
     private Image imageMur;
@@ -86,8 +87,8 @@ public class PacmanController {
     }
 
     private void deplacerPacman(int changementLigne, int changementColonne) {
-        int nouvelleLigne = pacmanLigne + changementLigne;
-        int nouvelleColonne = pacmanColonne + changementColonne;
+        int nouvelleLigne = player.getRow() + changementLigne;
+        int nouvelleColonne = player.getColumn() + changementColonne;
 
         // On gère le tunnel de téléportation sur les côtés
         if (nouvelleColonne < 0) {
@@ -97,22 +98,23 @@ public class PacmanController {
         }
 
         // On vérifie les murs et les limites
-        if (nouvelleLigne >= 0 && nouvelleLigne < NB_LIGNES) {
-            if (carteNiveau[nouvelleLigne][nouvelleColonne] != 1) { // Si c'est pas un mur
+        if (gameMap.isOnMap(nouvelleLigne, nouvelleColonne)) {
+            Tile cible = gameMap.get(nouvelleLigne, nouvelleColonne);
+            if (cible.getContent() != TileContent.WALL) { // Si c'est pas un mur
 
-                if (carteNiveau[nouvelleLigne][nouvelleColonne] == 0) {
-                    // On dit à la carte que la case est maintenant vide (2)
-                    carteNiveau[nouvelleLigne][nouvelleColonne] = 2;
+                if (cible.getGum() == Gum.PACGUM) {
+                    // On retire le gum et on incrémente le score
+                    cible.setGum(null);
+                    score += 10;
+                    scoreLabel.setText("Score : " + score);
                 }
 
-                grilleImages[pacmanLigne][pacmanColonne].setImage(null);
+                grilleImages[player.getRow()][player.getColumn()].setImage(null);
 
                 // On met à jour les coordonnées
-                pacmanLigne = nouvelleLigne;
-                pacmanColonne = nouvelleColonne;
+                player.setPosition(nouvelleLigne, nouvelleColonne);
 
-
-                grilleImages[pacmanLigne][pacmanColonne].setImage(imagePacman);
+                grilleImages[player.getRow()][player.getColumn()].setImage(imagePacman);
             }
         }
     }
@@ -125,6 +127,7 @@ public class PacmanController {
         gameBoard.setAlignment(javafx.geometry.Pos.CENTER);
 
         grilleImages = new ImageView[NB_LIGNES][NB_COLONNES];
+        gameMap = new GameMap(NB_LIGNES, NB_COLONNES);
 
         for (int c = 0; c < NB_COLONNES; c++) {
             ColumnConstraints colConst = new ColumnConstraints();
@@ -138,15 +141,29 @@ public class PacmanController {
             gameBoard.getRowConstraints().add(rowConst);
         }
 
+        // Construction de la GameMap à partir du tableau d'initialisation
+        for (int ligne = 0; ligne < NB_LIGNES; ligne++) {
+            for (int colonne = 0; colonne < NB_COLONNES; colonne++) {
+                TileContent contenu = (carteNiveau[ligne][colonne] == 1)
+                        ? TileContent.WALL
+                        : TileContent.PATH;
+                Tile tile = new Tile(ligne, colonne, contenu);
+                if (carteNiveau[ligne][colonne] == 0) {
+                    tile.setGum(Gum.PACGUM);
+                }
+                gameMap.set(ligne, colonne, tile);
+            }
+        }
+
         // On place Pacman au centre de la carte (Ligne 8, Colonne 10)
-        pacmanLigne = 8;
-        pacmanColonne = 10;
-        carteNiveau[pacmanLigne][pacmanColonne] = 2;
+        player = new Player(8, 10, 3);
+        gameMap.get(player.getRow(), player.getColumn()).setGum(null);
 
         for (int ligne = 0; ligne < NB_LIGNES; ligne++) {
             for (int colonne = 0; colonne < NB_COLONNES; colonne++) {
+                Tile tile = gameMap.get(ligne, colonne);
 
-                if (carteNiveau[ligne][colonne] != 1) {
+                if (tile.getContent() != TileContent.WALL) {
                     ImageView fond = new ImageView(imageChemin);
                     gameBoard.add(fond, colonne, ligne);
                 }
@@ -154,13 +171,13 @@ public class PacmanController {
                 ImageView premierPlan = new ImageView();
                 grilleImages[ligne][colonne] = premierPlan; // mise en place du premier plan pour empiler les images
 
-                if (ligne == pacmanLigne && colonne == pacmanColonne) {
+                if (ligne == player.getRow() && colonne == player.getColumn()) {
                     premierPlan.setImage(imagePacman);
                 }
-                else if (carteNiveau[ligne][colonne] == 1) {
+                else if (tile.getContent() == TileContent.WALL) {
                     premierPlan.setImage(imageMur);
                 }
-                else if (carteNiveau[ligne][colonne] == 0) {
+                else if (tile.getGum() == Gum.PACGUM) {
                     premierPlan.setImage(imagePacGum);
                 }
 
