@@ -27,5 +27,5 @@ application {
 // La version de JavaFX utilisée dans le projet, et les composants requis.
 javafx {
     version = '21.0.1'
-    modules = ['javafx.controls', 'javafx.fxml']
+    modules = ['javafx.controls', 'javafx.fxml', 'javafx.media']
 }

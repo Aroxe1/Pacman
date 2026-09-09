@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #000000;"
+            stylesheets="@styles.css"
+            xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.PacmanController">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" spacing="15.0"
+              style="-fx-background-color: #000000; -fx-border-color: #2121FF; -fx-border-width: 0 0 3 0; -fx-padding: 10;"
+              BorderPane.alignment="CENTER">
+            <children>
+                <Label fx:id="scoreLabel" text="SCORE : 0" textFill="#FFFF00">
+                    <font>
+                        <Font name="System Bold" size="24.0" />
+                    </font>
+                </Label>
+
+                <Region HBox.hgrow="ALWAYS" />
+
+                <Label text="VIES :" textFill="#FFFF00">
+                    <font>
+                        <Font name="System Bold" size="24.0" />
+                    </font>
+                </Label>
+
+                <HBox fx:id="livesBox" alignment="CENTER_LEFT" spacing="5.0" />
+            </children>
+        </HBox>
+    </top>
+
+    <center>
+        <StackPane fx:id="gameArea" prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <children>
+                <GridPane fx:id="gameBoard" />
+            </children>
+        </StackPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" spacing="20" styleClass="bottom-bar" BorderPane.alignment="CENTER">
+            <children>
+                <Button fx:id="menuButton"    text="MENU"     styleClass="game-button" onAction="#onMenu"/>
+                <Button fx:id="restartButton" text="REJOUER"  styleClass="game-button" onAction="#onRestart"/>
+                <Button fx:id="muteButton"    text="SON : ON" styleClass="game-button" onAction="#onMute"/>
+            </children>
+        </HBox>
+    </bottom>
+
+</BorderPane>

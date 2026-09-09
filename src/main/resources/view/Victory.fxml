@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" stylesheets="@styles.css" styleClass="victory-pane"
+      xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.VictoryController">
+
+    <VBox alignment="CENTER" spacing="22" styleClass="victory-card" maxWidth="540">
+
+        <Label text="VICTOIRE !" styleClass="victory-title"/>
+        <Label text="• TU AS TOUT MANGÉ •" styleClass="victory-subtitle"/>
+
+        <Region prefHeight="10"/>
+
+        <VBox alignment="CENTER" spacing="4" styleClass="victory-score-box">
+            <Label text="SCORE FINAL" styleClass="victory-score-label"/>
+            <Label fx:id="finalScoreLabel" text="0" styleClass="victory-score"/>
+        </VBox>
+
+        <Region prefHeight="15"/>
+
+        <VBox alignment="CENTER" spacing="16">
+            <Button fx:id="retryButton" text="REJOUER" styleClass="gameover-btn, gameover-btn-retry" onAction="#onRetry"/>
+            <Button fx:id="menuButton"  text="MENU"    styleClass="gameover-btn, gameover-btn-menu"  onAction="#onMenu"/>
+        </VBox>
+
+    </VBox>
+
+</VBox>
